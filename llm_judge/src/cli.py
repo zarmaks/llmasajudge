@@ -20,11 +20,17 @@ REPORTS_DIR = Path("reports")
 
 
 def _write_report(
-    path: Path, metrics: dict[str, float], counts: Counter[str]
+    path: Path,
+    metrics: dict[str, float],
+    counts: Counter[str],
+    gold: list[str] | None = None,
+    preds: list[str] | None = None,
 ) -> None:
-    """Write a minimal Markdown report."""
+    """Write a Markdown report with summary metrics and confusion matrix."""
+
     path.parent.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).isoformat(timespec='seconds')
+    timestamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
     lines: list[str] = [
         f"# Evaluation Report – {timestamp} UTC",
         "",
@@ -35,6 +41,37 @@ def _write_report(
         "",
         "## Macro metrics",
     ] + [f"- **{k.capitalize()}**: {v:.4f}" for k, v in metrics.items()]
+
+    if gold is not None and preds is not None:
+        per_class = precision_recall_f1(gold, preds, average="none")
+        labels = sorted({*gold, *preds})
+
+        lines += [
+            "",
+            "## Per-class metrics",
+            "| Class | Precision | Recall | F1 |",
+            "|-------|----------:|-------:|---:|",
+        ]
+        for label in labels:
+            lines.append(
+                f"| {label} | {per_class[f'{label}_precision']:.4f} | "
+                f"{per_class[f'{label}_recall']:.4f} | {per_class[f'{label}_f1']:.4f} |"
+            )
+
+        # Confusion matrix
+        matrix = {t: {p: 0 for p in labels} for t in labels}
+        for t, p in zip(gold, preds):
+            matrix[t][p] += 1
+
+        lines += [
+            "",
+            "## Confusion matrix",
+            "| True \\ Pred | " + " | ".join(labels) + " |",
+            "|--------------|" + "|".join(["---" for _ in labels]) + "|",
+        ]
+        for t in labels:
+            row = " | ".join(str(matrix[t][p]) for p in labels)
+            lines.append(f"| {t} | {row} |")
 
     path.write_text("\n".join(lines), encoding="utf-8")
 
@@ -121,7 +158,7 @@ def main() -> None:
         print(metrics_report(metrics, title="Macro metrics"))
         counts = Counter(preds)
         report_path = REPORTS_DIR / (Path(args.input_path).stem + "_report.md")
-        _write_report(report_path, metrics, counts)
+        _write_report(report_path, metrics, counts, gold, preds)
         print(f"📄 Markdown report saved to {report_path}")
 
 
