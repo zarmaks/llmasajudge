@@ -45,13 +45,15 @@ using the `precision_recall_f1` function. The overall score reported is the
 3. Set up environment variables by creating a `.env` file in the `llm_judge` directory:
    ```bash
    MISTRAL_API_KEY=your_mistral_api_key_here
+   TEMPERATURE=0.0
+   SEED=0
    ```
 
 ## Quick Start
 
 ```bash
 cd llm_judge
-python -m src.cli --in data/rag_evaluation_07_2025.csv --model mistral-large-latest
+python -m src.cli --in data/rag_evaluation_07_2025.csv --model mistral-large-latest --temperature 0.0 --seed 0
 ```
 
 ## Usage
@@ -59,13 +61,15 @@ python -m src.cli --in data/rag_evaluation_07_2025.csv --model mistral-large-lat
 ### Command Line Interface
 
 ```bash
-python -m src.cli --in data/my.csv [--model mistral-large-latest] [--out out.csv]
+python -m src.cli --in data/my.csv [--model mistral-large-latest] [--out out.csv] [--temperature 0.0] [--seed 0]
 ```
 
 **Arguments:**
 - `--in`: Input CSV file path (required)
 - `--out`: Optional output CSV path (defaults to input_file.judged.csv)
 - `--model`: Mistral model name (default: mistral-large-latest)
+- `--temperature`: Sampling temperature (default: 0.0)
+- `--seed`: Random seed (default: 0)
 
 ### Input CSV Format
 

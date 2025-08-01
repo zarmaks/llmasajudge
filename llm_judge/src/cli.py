@@ -6,6 +6,7 @@ import argparse
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
+import random
 
 import pandas as pd
 from tqdm import tqdm
@@ -13,6 +14,7 @@ from tqdm import tqdm
 from .io import load_table, save_table
 from .judge import Judge
 from .evaluation import precision_recall_f1, metrics_report
+from .config import config
 
 REPORTS_DIR = Path("reports")
 
@@ -62,14 +64,36 @@ def main() -> None:
         "--model", dest="model", default="mistral-small-latest",
         help="Mistral model name"
     )
+    parser.add_argument(
+        "--temperature",
+        dest="temperature",
+        type=float,
+        default=config.TEMPERATURE,
+        help="Sampling temperature",
+    )
+    parser.add_argument(
+        "--seed",
+        dest="seed",
+        type=int,
+        default=config.SEED,
+        help="Random seed",
+    )
     args = parser.parse_args()
+
+    random.seed(args.seed)
+    try:
+        import numpy as np
+
+        np.random.seed(args.seed)
+    except Exception:
+        pass
 
     # 1. Load and normalize column names
     df = load_table(args.input_path)
     df = _normalize_column_names(df)
     gold = df["Label"].tolist() if "Label" in df.columns else None
 
-    judge = Judge(model=args.model)
+    judge = Judge(model=args.model, temperature=args.temperature)
 
     preds: list[str] = []
     cots: list[str] = []

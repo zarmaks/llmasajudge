@@ -19,6 +19,7 @@ class Config:
     MISTRAL_API_KEY: Optional[str] = os.getenv("MISTRAL_API_KEY")
     DEFAULT_MODEL: str = os.getenv("DEFAULT_MODEL", "mistral-large-latest")
     TEMPERATURE: float = float(os.getenv("TEMPERATURE", "0.0"))
+    SEED: int = int(os.getenv("SEED", "0"))
     
     # Output Configuration
     REPORTS_DIR: Path = Path(os.getenv("REPORTS_DIR", "reports"))
