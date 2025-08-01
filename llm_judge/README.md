@@ -21,6 +21,8 @@ An automated evaluation system that uses Large Language Models to judge the qual
 3. Set up environment variables by creating a `.env` file:
    ```bash
    MISTRAL_API_KEY=your_mistral_api_key_here
+   TEMPERATURE=0.0
+   SEED=0
    ```
 
 ## Usage
@@ -28,13 +30,15 @@ An automated evaluation system that uses Large Language Models to judge the qual
 ### Command Line Interface
 
 ```bash
-python -m src.cli --in data/my.csv [--model mistral-large-latest] [--out out.csv]
+python -m src.cli --in data/my.csv [--model mistral-large-latest] [--out out.csv] [--temperature 0.0] [--seed 0]
 ```
 
 **Arguments:**
 - `--in`: Input CSV file path (required)
 - `--out`: Optional output CSV path (defaults to input_file.judged.csv)
 - `--model`: Mistral model name (default: mistral-large-latest)
+- `--temperature`: Sampling temperature (default: 0.0)
+- `--seed`: Random seed (default: 0)
 
 ### Input CSV Format
 
@@ -47,7 +51,7 @@ Your CSV should contain these columns:
 ### Example
 
 ```bash
-python -m src.cli --in data/rag_evaluation_07_2025.csv --model mistral-large-latest
+python -m src.cli --in data/rag_evaluation_07_2025.csv --model mistral-large-latest --temperature 0.0 --seed 0
 ```
 
 ## Output
