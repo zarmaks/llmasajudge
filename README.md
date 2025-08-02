@@ -51,9 +51,10 @@ using the `precision_recall_f1` function. The overall score reported is the
 
 ## Quick Start
 
+Run the evaluation from the repository root:
+
 ```bash
-cd llm_judge
-python -m src.cli --in data/rag_evaluation_07_2025.csv --model mistral-large-latest --temperature 0.0 --seed 0
+python main.py --csv llm_judge/data/rag_evaluation_07_2025.csv --model mistral-large-latest --temperature 0.0 --seed 0
 ```
 
 ## Usage
@@ -61,11 +62,11 @@ python -m src.cli --in data/rag_evaluation_07_2025.csv --model mistral-large-lat
 ### Command Line Interface
 
 ```bash
-python -m src.cli --in data/my.csv [--model mistral-large-latest] [--out out.csv] [--temperature 0.0] [--seed 0]
+python main.py --csv llm_judge/data/my.csv [--model mistral-large-latest] [--out out.csv] [--temperature 0.0] [--seed 0]
 ```
 
 **Arguments:**
-- `--in`: Input CSV file path (required)
+- `--csv`: Input CSV file path (required)
 - `--out`: Optional output CSV path (defaults to input_file.judged.csv)
 - `--model`: Mistral model name (default: mistral-large-latest)
 - `--temperature`: Sampling temperature (default: 0.0)
@@ -98,7 +99,7 @@ The system generates:
 Run tests with:
 ```bash
 cd llm_judge
-pytest tests/
+python -m pytest tests/
 ```
 
 ## Configuration
