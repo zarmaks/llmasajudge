@@ -96,10 +96,9 @@ The system generates:
 
 ## Testing
 
-Run tests with:
+Run tests from the repository root with:
 ```bash
-cd llm_judge
-python -m pytest tests/
+PYTHONPATH=llm_judge pytest
 ```
 
 ## Configuration
